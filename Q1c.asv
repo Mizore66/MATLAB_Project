@@ -1,0 +1,85 @@
+fprintf('\n Q1c \n\n')
+
+pop_data = importdata("Population_data.xlsx");
+poplocation = pop_data.textdata(2:end,2);
+popmill = pop_data.data;
+check = 0;
+j = 1;
+
+[AsiaPop_mill,AfricaPop_mill,NorthAmericaPop_mill,SouthAmericaPop_mill,OceaniaPop_mill,EuropePop_mill] = deal(0,0,0,0,0,0);
+
+for a = 1:length(Total_Deaths)
+    for n = j:length(poplocation)
+        if strcmp(poplocation(n),Location(a)) == 1
+            if strcmp(Continent(a),'Asia') == 1
+                AsiaPop_mill = AsiaPop_mill + popmill(n);
+            end
+            if strcmp(Continent(a),'Africa') == 1
+                AfricaPop_mill = AfricaPop_mill + popmill(n);
+            end
+            if strcmp(Continent(a),'North America') == 1
+                NorthAmericaPop_mill = NorthAmericaPop_mill + popmill(n);
+            end
+            if strcmp(Continent(a),'South America') == 1
+                SouthAmericaPop_mill = SouthAmericaPop_mill + popmill(n);
+            end
+            if strcmp(Continent(a),'Europe') == 1
+                EuropePop_mill = EuropePop_mill + popmill(n);
+            end
+            if strcmp(Continent(a),'Oceania') == 1
+                OceaniaPop_mill = OceaniaPop_mill + popmill(n);
+            end
+            j = j + 1;
+            break
+        end
+    end
+end
+
+Case_perMillion = [AfricaCases(end)/AfricaPop_mill, AsiaCases(end)/AsiaPop_mill,EuropeCases(end)/EuropePop_mill,SouthAmericaCases(end)/SouthAmericaPop_mill,NorthAmericaCases(end)/NorthAmericaPop_mill,OceaniaCases(end)/OceaniaPop_mill];
+Death_perMillion = [AfricaDeaths(end)/AfricaPop_mill, AsiaDeaths(end)/AsiaPop_mill,EuropeDeaths(end)/EuropePop_mill,SouthAmericaDeaths(end)/SouthAmericaPop_mill,NorthAmericaDeaths(end)/NorthAmericaPop_mill,Oceania_deaths(end)/OceaniaPop_mill];
+
+for n = 1:6
+    Ranking_case(n) = 1;
+    Ranking_death(n) = 1;
+    for m = 1:6
+       if Case_perMillion(n)< Case_perMillion(m)
+           Ranking_case(n) = Ranking_case(n) + 1;
+       end
+       if Death_perMillion(n)< Death_perMillion(m)
+           Ranking_death(n) = Ranking_death(n) + 1;
+       end
+    end
+end
+
+%i.)
+world_map_case = imread("world_map.bmp");
+for row_index = 1:size(world_map_case,1)
+    for column_index = 1:size(world_map_case,2)
+        if world_map_case(row_index,column_index) == 0
+            continue
+        end
+            world_map_case(row_index,column_index) = (255/6)*(7-Ranking_case(world_map_case(row_index,column_index)));
+    end
+end
+
+%ii.)
+world_map_death = imread("world_map.bmp");
+for row_index = 1:size(world_map_death,1)
+    for column_index = 1:size(world_map_death,2)
+        if world_map_death(row_index,column_index) == 0
+            continue
+        end
+            world_map_death(row_index,column_index) = (255/6)*(7-Ranking_death(world_map_death(row_index,column_index)));
+    end
+end
+
+
+
+figure(2)
+subplot(2,1,1) 
+imshow(world_map_case)
+title('Shading the world map based on their ratio of amount of CovidCasePerMillion')
+
+subplot(2,1,2)
+imshow(world_map_death)
+title('Shading the world map based on their ratio of amount of CovidDeathPerMillion')

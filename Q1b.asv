@@ -1,0 +1,58 @@
+fprintf('\n Q1b \n\n')
+
+ for n = 1: 396
+     [Africacases(n), NorthAmerica_cases(n), SouthAmerica_cases(n), Oceania_cases(n), Asia_cases(n), Europe_cases(n), Africa_deaths(n), Asia_deaths(n), NorthAmerica_deaths(n), SouthAmerica_deaths(n), Europe_deaths(n), Oceania_deaths(n)] = deal(0,0,0,0,0,0,0,0,0,0,0,0);
+     for m = 1:length(Total_Cases)
+         if Corrected_days_tracked(m) == n
+             if strcmp(Continent(m), 'Africa') == 1
+                Africacases(n) = Africacases(n) + Total_Cases(m);
+                Africa_deaths(n) = Africa_deaths(n) + Total_Deaths(m);
+                continue
+             end
+             if strcmp(Continent(m), 'Asia') == 1
+                 Asia_cases(n) = Asia_cases(n) + Total_Cases(m);
+                 Asia_deaths(n) = Asia_deaths(n) + Total_Deaths(m);
+                 continue
+             end
+             if strcmp(Continent(m), 'North America') == 1
+                 NorthAmerica_cases(n) = NorthAmerica_cases(n) + Total_Cases(m);
+                 NorthAmerica_deaths(n) = NorthAmerica_deaths(n) + Total_Deaths(m);
+                 continue
+             end
+             if strcmp(Continent(m), 'South America') == 1
+                 SouthAmerica_cases(n) = SouthAmerica_cases(n) + Total_Cases(m);
+                 SouthAmerica_deaths(n) = SouthAmerica_deaths(n) + Total_Deaths(m);
+                 continue
+             end
+             if strcmp(Continent(m), 'Oceania') == 1
+                 Oceania_cases(n) = Oceania_cases(n) + Total_Cases(m);
+                 Oceania_deaths(n) = Oceania_deaths(n) + Total_Deaths(m);
+                 continue
+             end
+             if strcmp(Continent(m),'Europe') == 1
+                 Europe_cases(n) = Europe_cases(n) + Total_Cases(m);
+                 Europe_deaths(n) = Europe_deaths(n) + Total_Deaths(m);
+                 continue
+             end
+         end
+     end
+ end
+
+
+
+figure(1)
+subplot(1,2,1)
+plot(Days_Tracked(1:396),Africacases,'r-',Days_Tracked(1:396),Asia_cases,'b-',Days_Tracked(1:396),NorthAmerica_cases,'m-',Days_Tracked(1:396),Oceania_cases,'g-',Days_Tracked(1:396),SouthAmerica_cases,'y-',Days_Tracked(1:396),Europe_cases,'k-')
+legend('Africa','Asia','North America', 'Oceania', 'South America', 'Europe')
+legend('location','best')
+xlabel('Days since 1st-Aug-2020')
+hold on
+ylabel('Total amount of cases(x10^7)')
+
+subplot(1,2,2)
+plot(Days_Tracked(1:396),Africa_deaths,'r-',Days_Tracked(1:396),Asia_deaths,'b-',Days_Tracked(1:396),NorthAmerica_deaths,'m-',Days_Tracked(1:396),Oceania_deaths,'g-',Days_Tracked(1:396),SouthAmerica_deaths,'y-',Days_Tracked(1:396),Europe_deaths,'k-')
+legend('Africa','Asia','North America', 'Oceania', 'South America', 'Europe')
+legend('location','best')
+xlabel('Days since 1st-Aug-2020')
+hold on
+ylabel('Total amount of deaths(x10^5)')

@@ -1,0 +1,38 @@
+fprintf('\n Q2a \n\n')
+
+%i)
+theta = 1:89;
+time = zeros(1,length(theta));
+velocity = zeros(1,length(theta));
+for n = 1:length(theta)
+    time(n) = sqrt((0.0265*(tand(theta(n)) + (5/265)))/63568.8);
+    velocity(n) = sqrt(((-0.0005/time(n)) + 63568.8*time(n))^2 + (0.0265/time(n))^2);
+end
+
+%ii)
+distance_x = 0.1:0.1:26.5;
+distance_y = zeros(length(theta),length(distance_x));
+
+for phi = 1:length(theta)
+    for n = 1:length(distance_x)
+    travel_time(phi,n) = (distance_x(n)*3.6)/(velocity(phi)*cosd(theta(phi)));
+    distance_y(phi,n) = 0.5 + (velocity(phi)*sind(theta(phi))*travel_time(phi,n)/3.6) + 0.5*-9.81*(travel_time(phi,n))^2;
+    if distance_x(n) == 14.5
+        if distance_y(phi,n) <= 1.1
+            break
+        end
+    end
+    end
+end
+
+figure(3)
+plot(theta,velocity,'k-')
+xlabel('theta(in degrees)');
+ylabel('initialspeed(in km/h)');
+title("Theta vs initial speed (in km/h)")
+
+figure(4)
+plot(distance_x,distance_y,'r-')
+xlabel('xdistance travelled')
+ylabel('ydistance travelled')
+title("Trajectories with all values of theta")

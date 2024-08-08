@@ -1,0 +1,57 @@
+fprintf('\n Q2b \n\n')
+
+topspin = importdata('topspin.txt');
+time = topspin.data(:,1);
+RPM = topspin.data(:,2);
+linear_coeffs = polyfit(time,RPM,1);
+[m,c] = deal(linear_coeffs(1),linear_coeffs(2));
+RPM_fit = (m.*time) + c;
+
+% ii)
+Sr = sum((RPM-RPM_fit).^2);
+St = sum(((RPM -(mean(RPM))).^2));
+r2 = (St - Sr)/St;
+
+fprintf("Even though the value of r^2 is %2f, which is quite high. That doesnt mean that this isnt an appropriate model for the data, as it appears that the data set is curved and also dependant on the variable t, which means even though it seems accurate for now, as time passes on and the data set grows larger. Then the data model will greatly become less accurate", r2);
+
+% iii)
+edecay_fit= fit(time,RPM,'exp1');
+coefficients = coeffvalues(edecay_fit);
+Initial_RPM = coefficients(1);
+b = coefficients(2);
+fprintf("The initial RPM of the ball is: %2f\n", Initial_RPM);
+
+%iv)
+f= @(t) (Initial_RPM*((exp(t*b)))) - 3000;
+precision = 1e-5;
+tl = time(1);
+tu = time(end);
+
+[root, iter] = bisection_template(f,tl,tu,precision);
+
+%v)
+actual_f =  @(t) (Initial_RPM*((exp(t*b))));
+final_t = 0.5:0.1:2.0;
+
+for n = 1:length(final_t)
+    I(n) = integral(actual_f, 0, final_t(n));
+end
+
+figure(5)
+hold on
+plot(time,RPM,'r.')
+%plot(time,RPM_fit,'k-')
+plot(edecay_fit,time,RPM,'b-')
+plot(root, actual_f(root), 'gx')
+legend('datapoint','','linearfit','Rootfor3k','Root (for 3k)')
+xlabel('time')
+ylabel('RPM')
+title('Topspin.txt vs Data Models')
+
+
+figure(6)
+hold on
+plot(final_t,I, 'k-')
+yyaxis left
+ylabel('Rotations done')
+title('(No.of Rotations and Energy loss) vs Time')
